@@ -26,7 +26,7 @@ lib/
 ├── providers/
 │   └── auth_provider.dart      # Authentication state management
 ├── screens/
-│   ├── home_screen.dart        # Home page with products and news
+│   ├── home_screen.dart        # Home page with products
 │   ├── login_screen.dart       # Login page
 │   ├── register_screen.dart    # Registration page
 │   └── profile_screen.dart     # User profile page
