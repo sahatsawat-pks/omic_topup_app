@@ -6,8 +6,8 @@ class DatabaseConfig {
   static const String host = '10.0.2.2';
   static const int port = 3306;
   static const String database = 'omic_web';
-  static const String username = 'root';
-  static const String password = 'aito1472*'; // Update with your MySQL password
+  static const String username = ''; // Update your username here
+  static const String password = ''; // Update with your MySQL password
   
   // Connection timeout in seconds (reduced for mobile)
   static const int connectionTimeout = 5;

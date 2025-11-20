@@ -50,7 +50,7 @@ lib/
 
 1. Make sure your backend server is running:
    ```bash
-   cd ../sec02_gr01_ws_src
+   cd ../service
    npm install
    npm start
    ```
@@ -84,6 +84,40 @@ Edit `lib/config/api_constants.dart` to configure:
 - API endpoints
 - Timeout settings
 - Storage keys
+
+### Database Config
+
+Edit your database configuration in the `.env` file, in your backend's config file (such as `service/.env` or `service/database_config.js`), or in the Flutter app's `lib/config/database_config.dart` if you use a local database or need to reference database settings in Dart code.
+Typical settings include:
+- DB_HOST: Database host
+- DB_PORT: Database port
+- DB_USER: Database username
+- DB_PASS: Database password
+- DB_NAME: Database name
+
+Example for `.env`:
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=youruser
+DB_PASS=yourpassword
+DB_NAME=omic_topup
+```
+
+For Flutter, you can create or edit `lib/config/database_config.dart` to read these values using a package like `flutter_dotenv`:
+```dart
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class DatabaseConfig {
+   static String get host => dotenv.env['DB_HOST'] ?? '';
+   static String get port => dotenv.env['DB_PORT'] ?? '';
+   static String get user => dotenv.env['DB_USER'] ?? '';
+   static String get password => dotenv.env['DB_PASS'] ?? '';
+   static String get dbName => dotenv.env['DB_NAME'] ?? '';
+}
+```
+
+Make sure your backend and app read these values and connect to the correct database.
 
 ### Theme
 
