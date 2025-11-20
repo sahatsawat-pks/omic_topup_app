@@ -41,7 +41,7 @@ class ApiService {
       url,
       headers: _getHeaders(includeAuth: requiresAuth, token: token),
     ).timeout(
-      const Duration(seconds: ApiConstants.connectionTimeout),
+      Duration(seconds: ApiConstants.connectionTimeout),
     );
   }
   
@@ -58,7 +58,7 @@ class ApiService {
       headers: _getHeaders(includeAuth: requiresAuth, token: token),
       body: jsonEncode(body),
     ).timeout(
-      const Duration(seconds: ApiConstants.connectionTimeout),
+      Duration(seconds: ApiConstants.connectionTimeout),
     );
   }
   
@@ -75,7 +75,7 @@ class ApiService {
       headers: _getHeaders(includeAuth: requiresAuth, token: token),
       body: jsonEncode(body),
     ).timeout(
-      const Duration(seconds: ApiConstants.connectionTimeout),
+      Duration(seconds: ApiConstants.connectionTimeout),
     );
   }
   
@@ -90,7 +90,7 @@ class ApiService {
       url,
       headers: _getHeaders(includeAuth: requiresAuth, token: token),
     ).timeout(
-      const Duration(seconds: ApiConstants.connectionTimeout),
+      Duration(seconds: ApiConstants.connectionTimeout),
     );
   }
   

@@ -77,6 +77,9 @@ dependencies:
   # MySQL connector
   mysql1: ^0.20.0
 
+  # dotenv
+  flutter_dotenv: ^5.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -107,6 +110,7 @@ flutter:
     - assets/images/avatars/
     - assets/icons/
     - assets/icons/icon.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

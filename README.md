@@ -17,6 +17,7 @@ A Flutter mobile application for game top-ups, based on the OMiC Games web appli
 lib/
 ├── config/
 │   ├── api_constants.dart     # API endpoints and configuration
+│   ├── database_config.dart   # Database configuration
 │   └── app_theme.dart          # Theme configuration (colors, styles)
 ├── models/
 │   ├── user.dart               # User data model
@@ -45,6 +46,7 @@ lib/
 - Dart SDK
 - Android Studio / Xcode for emulators
 - VS Code with Flutter extension (recommended)
+- MySQL Server running
 
 ### Backend Setup
 
@@ -55,69 +57,101 @@ lib/
    npm start
    ```
 
-2. Update the API base URL in `lib/config/api_constants.dart` if needed:
-   ```dart
-   static const String baseUrl = 'http://YOUR_IP:3300/api';
-   ```
-   - For Android emulator: Use `http://10.0.2.2:3300/api`
-   - For iOS simulator: Use `http://localhost:3300/api`
-   - For physical devices: Use your computer's IP address
+2. The backend should be configured to read from its own `.env` file for database and API settings.
 
 ### Flutter App Setup
 
-1. Install dependencies:
+1. **Create `.env` file** in the root directory of the Flutter project:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure your `.env` file** with your settings:
+   ```dotenv
+   # Database Configuration
+   DB_HOST=10.0.2.2
+   DB_PORT=3306
+   DB_NAME=omic_web
+   DB_USERNAME=your_username_here
+   DB_PASSWORD=your_password_here
+   DB_CONNECTION_TIMEOUT=5
+   DB_MAX_RETRY_ATTEMPTS=3
+
+   # API Configuration
+   API_BASE_URL=http://10.0.2.2:3300/api
+   API_CONNECTION_TIMEOUT=30
+   API_RECEIVE_TIMEOUT=30
+
+   # API Endpoints
+   API_LOGIN=/auth/login
+   API_REGISTER=/auth/register
+   API_PRODUCTS=/products
+   API_PRODUCT_BY_ID=/products/
+   API_PACKAGES=/packages
+   API_PACKAGES_BY_PRODUCT_ID=/packages/product/
+   API_ORDERS=/orders
+   API_LATEST_ORDER_ID=/orders/latest
+   API_UPDATE_PROFILE=/profile/update
+   API_UPDATE_PASSWORD=/profile/password
+
+   # Storage Keys
+   STORAGE_ACCESS_TOKEN_KEY=accessToken
+   STORAGE_USER_KEY=authUser
+   ```
+
+   **Important API Base URL configurations:**
+   - For Android emulator: `http://10.0.2.2:3300/api`
+   - For iOS simulator: `http://localhost:3300/api`
+   - For physical devices: `http://YOUR_COMPUTER_IP:3300/api` (e.g., `http://192.168.1.100:3300/api`)
+
+3. **Install dependencies**:
    ```bash
    flutter pub get
    ```
 
-2. Run the app:
+4. **Run the app**:
    ```bash
    flutter run
    ```
 
-## Configuration
+## Environment Variables
+
+This app uses environment variables for configuration. All sensitive data and configuration should be stored in the `.env` file.
+
+### Creating .env file
+
+1. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` with your actual values
+3. **Never commit `.env` to version control** (it's in `.gitignore`)
+
+### Environment Variables Reference
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DB_HOST` | Database host address | `10.0.2.2` for Android emulator |
+| `DB_PORT` | Database port | `3306` |
+| `DB_NAME` | Database name | `omic_web` |
+| `DB_USERNAME` | Database username | `root` |
+| `DB_PASSWORD` | Database password | `your_password` |
+| `DB_CONNECTION_TIMEOUT` | DB connection timeout (seconds) | `5` |
+| `DB_MAX_RETRY_ATTEMPTS` | Max retry attempts | `3` |
+| `API_BASE_URL` | Backend API base URL | `http://10.0.2.2:3300/api` |
+| `API_CONNECTION_TIMEOUT` | API timeout (seconds) | `30` |
+| `API_RECEIVE_TIMEOUT` | API receive timeout (seconds) | `30` |
+
+## Configuration Files
 
 ### API Constants
 
-Edit `lib/config/api_constants.dart` to configure:
-- Base URL for your backend API
-- API endpoints
-- Timeout settings
-- Storage keys
+The `lib/config/api_constants.dart` file now reads from environment variables using `flutter_dotenv`. All API endpoints and timeouts are configured through the `.env` file.
 
 ### Database Config
 
-Edit your database configuration in the `.env` file, in your backend's config file (such as `service/.env` or `service/database_config.js`), or in the Flutter app's `lib/config/database_config.dart` if you use a local database or need to reference database settings in Dart code.
-Typical settings include:
-- DB_HOST: Database host
-- DB_PORT: Database port
-- DB_USER: Database username
-- DB_PASS: Database password
-- DB_NAME: Database name
-
-Example for `.env`:
-```
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=youruser
-DB_PASS=yourpassword
-DB_NAME=omic_topup
-```
-
-For Flutter, you can create or edit `lib/config/database_config.dart` to read these values using a package like `flutter_dotenv`:
-```dart
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-class DatabaseConfig {
-   static String get host => dotenv.env['DB_HOST'] ?? '';
-   static String get port => dotenv.env['DB_PORT'] ?? '';
-   static String get user => dotenv.env['DB_USER'] ?? '';
-   static String get password => dotenv.env['DB_PASS'] ?? '';
-   static String get dbName => dotenv.env['DB_NAME'] ?? '';
-}
-```
-
-Make sure your backend and app read these values and connect to the correct database.
+The `lib/config/database_config.dart` file reads database settings from environment variables. Configure your database connection in the `.env` file.
 
 ### Theme
 
@@ -176,15 +210,37 @@ flutter build ios --release
 ## Troubleshooting
 
 ### Connection Issues
-- Make sure backend server is running
-- Check API base URL configuration
+- Make sure backend server is running on the correct port
+- Check `.env` file for correct `API_BASE_URL`
 - For Android emulator, use `10.0.2.2` instead of `localhost`
+- For physical devices, use your computer's local IP address
+- Ensure your device/emulator can reach the backend server
+
+### Environment Variable Issues
+- Make sure `.env` file exists in the project root
+- Verify `.env` is listed in `pubspec.yaml` under assets
+- Run `flutter clean` and `flutter pub get` after changing `.env`
+- Restart the app after modifying environment variables
 
 ### Package Issues
 ```bash
 flutter clean
 flutter pub get
 ```
+
+### Database Connection Issues
+- Verify MySQL server is running
+- Check database credentials in `.env`
+- Ensure the database `omic_web` exists
+- For Android emulator, use `10.0.2.2` as `DB_HOST`
+
+## Security Notes
+
+- **Never commit `.env` file** to version control
+- Keep `.env.example` updated with all required variables (without actual values)
+- Use different `.env` files for development, staging, and production
+- Rotate sensitive credentials regularly
+- Use strong passwords for database access
 
 ## Next Steps
 
@@ -203,5 +259,16 @@ Key packages used:
 - `http`: HTTP requests
 - `shared_preferences`: Local storage
 - `flutter_secure_storage`: Secure token storage
+- `flutter_dotenv`: Environment variable management
 - `image_picker`: Avatar upload
 
+## Team Setup
+
+For team members setting up the project:
+
+1. Clone the repository
+2. Copy `.env.example` to `.env`
+3. Ask team lead for the correct environment values
+4. Run `flutter pub get`
+5. Ensure backend server is running
+6. Run the app with `flutter run`

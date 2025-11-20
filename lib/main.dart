@@ -23,8 +23,11 @@ import 'screens/manage_users_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/mysql_service.dart';
 import 'package:omic_topup_app/providers/admin_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize MySQL connection FIRST before starting app
